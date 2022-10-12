@@ -1,6 +1,9 @@
 import { TemperatureService } from './temperature.service';
 import { Note } from './Note';
 import { Injectable } from '@angular/core';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Observable, throwError, of } from 'rxjs';
+import { GetCitiesService } from './get-cities.service';
 
 @Injectable({
   providedIn: 'root'
@@ -8,7 +11,7 @@ import { Injectable } from '@angular/core';
 export class NotasService {
   notas?: Map<string, Note>;
 
-  constructor(private servicioTemperatura: TemperatureService) {
+  constructor(private servicioTemperatura: TemperatureService,  private cities: GetCitiesService) {
     this.notas = new Map<string, Note>();
   }
 
@@ -27,19 +30,30 @@ export class NotasService {
 
   crearNota(nota: Note) {
     if (this.notas) {
-      nota.id = `${Math.floor(Math.random() * 1000000)}`;
-      this.notas.set(nota.id, nota);
-      let ciudad = {
-        nombre: nota.ciudad,
-        lat: '1',
-        long: '1'
-      }
-      this.servicioTemperatura.getWeather(new Date(nota.fechaFormateada), ciudad)
-      .subscribe(resultado => {
-        nota.temperatura = resultado ? resultado : '';
+      
+      this.cities.getCities().subscribe(resultado => {
+        nota.id = `${Math.floor(Math.random() * 1000000)}`;
+        this.notas!.set(nota.id, nota);
+        let ciudad = { nombre: 'a', lat: 'b', long: 'c' };
+        resultado.forEach(element => {
+          if (nota.ciudad == element.nombre) {
+            ciudad = element;
+          }
+        });
+
+        this.servicioTemperatura.getWeather().subscribe(resultado =>{
+          resultado.forEach(element => {
+            if (element.lat == ciudad.lat) {
+              if(element.long == ciudad.long) {
+                nota.temperatura = element.temp;
+              }
+            }
+        });
+
       });
-    }
+    });
   }
+}
 
   editarNota(nota: Note) {
     if (this.notas) {

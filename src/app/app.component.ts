@@ -23,4 +23,8 @@ export class AppComponent {
     const modalRef = this.modalService.open(ModalAgregarEditarComponent);
     modalRef.componentInstance.notaEntrada = this.nota;
   }
+
+  buttonToggle() {
+    document.body.classList.toggle('dark');
+  }
 }

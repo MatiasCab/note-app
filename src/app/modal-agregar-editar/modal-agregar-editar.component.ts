@@ -5,6 +5,7 @@ import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { Ciudad } from '../Ciudad';
 import { Color } from '../Color';
 import { Note, EmptyNote } from '../Note';
+import { GetCitiesService } from '../get-cities.service';
 
 @Component({
   selector: 'app-modal-agregar-editar',
@@ -19,22 +20,21 @@ export class ModalAgregarEditarComponent implements OnInit {
   textoBoton: string = 'Agregar';
 
   // Datos mockeados
-  ciudades: Ciudad[] = [
-    { nombre: 'Buenos Aires', lat: '-34,6118', long: '-58,4173' },
-    { nombre: 'Montevideo', lat: '-34,8941', long: '-56,0675' },
-    { nombre: 'Paris', lat: '48,8567', long: '2,3510' },
-    { nombre: 'Tokyo', lat: '35,6785', long: '139,6823' },
-    { nombre: 'New York', lat: '41,6785', long: '-139,6823' }
-  ];
+  ciudades: Ciudad[] = [];
+  getCities() {
+    this.citiesService.getCities().subscribe(resultado => {
+      this.ciudades = resultado;
+    });
+  }
   colores: Color[] = [
     { nombre: 'Rojo', selector: 'btnRed' },
     { nombre: 'Verde', selector: 'btnGreen' },
     { nombre: 'Amarillo', selector: 'btnYellow' },
     { nombre: 'Cielo', selector: 'btnSky' }
   ];
-  // ----------------
 
-  constructor(public modalActivo: NgbActiveModal, private servicioNotas: NotasService) { }
+
+  constructor(public modalActivo: NgbActiveModal, private servicioNotas: NotasService, private citiesService: GetCitiesService) { }
 
   ngOnInit(): void {
     if (this.notaEntrada) {
@@ -42,6 +42,7 @@ export class ModalAgregarEditarComponent implements OnInit {
       this.textoBoton = 'Editar';
       this.nota = { ...this.notaEntrada };
     }
+    this.getCities();
   }
 
   guardarNota() {

@@ -25,6 +25,7 @@ export class NoteComponent implements OnInit {
 
   openModalDelete() {
     const modal = this.modalService.open(ModalEliminarComponent);
-    (modal.componentInstance as ModalEliminarComponent).noteId = this.note?.id;
+    (modal.componentInstance as ModalEliminarComponent).noteId = this.note!.id;
+    event?.stopPropagation();// Detiene el bubbling
   }
 }

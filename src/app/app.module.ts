@@ -14,6 +14,8 @@ import { BotonAgregarComponent } from './boton-agregar/boton-agregar.component';
 import { ModalEliminarComponent } from './modal-eliminar/modal-eliminar.component';
 
 import { HttpClientModule } from '@angular/common/http';
+import { HttpClientInMemoryWebApiModule } from 'angular-in-memory-web-api';
+import { InMemoryDataService } from './in-memory-data.service';
 
 @NgModule({
   declarations: [
@@ -28,7 +30,12 @@ import { HttpClientModule } from '@angular/common/http';
   ],
   imports: [
     BrowserModule,
+    
     HttpClientModule,
+    HttpClientInMemoryWebApiModule.forRoot(
+      InMemoryDataService, { dataEncapsulation: false }
+    ),
+    
     AppRoutingModule,
     NgbModule,
     FormsModule

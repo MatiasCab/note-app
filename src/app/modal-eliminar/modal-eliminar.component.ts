@@ -3,6 +3,7 @@ import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { NotasService } from '../notas.service';
 
 
+
 @Component({
   selector: 'app-modal-eliminar',
   templateUrl: './modal-eliminar.component.html',
@@ -10,7 +11,7 @@ import { NotasService } from '../notas.service';
 })
 export class ModalEliminarComponent implements OnInit {
 
-  @Input() noteId?: string;
+  @Input() noteId!: string;
   constructor(public modalActivo: NgbActiveModal, private noteService: NotasService) { }
 
   ngOnInit(): void {
@@ -18,6 +19,11 @@ export class ModalEliminarComponent implements OnInit {
 
   delete() {
     this.noteService.eliminarNota(this.noteId);
+    this.modalActivo.close();
+  }
+
+  closeModal() {
+    this.modalActivo.close();
   }
   
 
